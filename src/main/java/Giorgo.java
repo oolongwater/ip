@@ -1,11 +1,12 @@
 import java.util.Scanner;
+import java.util.ArrayList;
 
 public class Giorgo {
 
     public static void main(String[] args) throws InvalidInputException {
         String logo = "Giorgo";
         Scanner scanner = new Scanner(System.in);
-        Task[] tasks = new Task[100];
+        ArrayList<Task> tasks = new ArrayList<>();
         int taskCount = 0;
 
         System.out.println(
@@ -24,26 +25,26 @@ public class Giorgo {
 
                 switch (command.toLowerCase()) {
                     case "list":
-                        listTasks(tasks, taskCount);
+                        listTasks(tasks);
                         break;
                     case "mark":
-                        markTask(argument, tasks, taskCount);
+                        markTask(argument, tasks);
                         break;
                     case "unmark":
-                        unmarkTask(argument, tasks, taskCount);
+                        unmarkTask(argument, tasks);
                         break;
                     case "todo":
                         if (argument.isEmpty()) {
                             throw new InvalidInputException("OOPS!!! The description of a todo cannot be empty.");
                         } else {
-                            addTask(new Todo(argument), tasks, taskCount);
+                            addTask(new Todo(argument), tasks);
                             taskCount++;
                         }
                         break;
                     case "deadline":
                         String[] deadlineParts = argument.split("/by ");
                         if (deadlineParts.length == 2) {
-                            addTask(new Deadline(deadlineParts[0].trim(), deadlineParts[1].trim()), tasks, taskCount);
+                            addTask(new Deadline(deadlineParts[0].trim(), deadlineParts[1].trim()), tasks);
                             taskCount++;
                         } else {
                             throw new InvalidInputException("Invalid deadline format. Use: deadline <description> /by <date/time>");
@@ -52,11 +53,14 @@ public class Giorgo {
                     case "event":
                         String[] eventParts = argument.split("/from |/to ");
                         if (eventParts.length == 3) {
-                            addTask(new Event(eventParts[0].trim(), eventParts[1].trim(), eventParts[2].trim()), tasks, taskCount);
+                            addTask(new Event(eventParts[0].trim(), eventParts[1].trim(), eventParts[2].trim()), tasks);
                             taskCount++;
                         } else {
                             throw new InvalidInputException("Invalid event format. Use: event <description> /from <start> /to <end>");
                         }
+                        break;
+                    case "delete":
+                        deleteTask(argument, tasks);
                         break;
                     case "bye":
                         System.out.println("____________________________________________________________\n" +
@@ -77,30 +81,31 @@ public class Giorgo {
 
 
     // Helper method to list tasks
-    private static void listTasks(Task[] tasks, int taskCount) {
-        if (taskCount == 0) {
+
+    private static void listTasks(ArrayList<Task> tasks) {
+        if (tasks.isEmpty()) {
             System.out.println("____________________________________________________________\n" +
                     " No tasks yet.\n" +
                     "____________________________________________________________\n");
         } else {
             System.out.println("____________________________________________________________\n" +
                     " Here are the tasks in your list:\n");
-            for (int i = 0; i < taskCount; i++) {
-                System.out.println((i + 1) + "." + tasks[i].toString());
+            for (int i = 0; i < tasks.size(); i++) {
+                System.out.println((i + 1) + "." + tasks.get(i).toString());
             }
             System.out.println("____________________________________________________________\n");
         }
     }
 
-    // Helper method to mark a task as done
-    private static void markTask(String input, Task[] tasks, int taskCount) throws InvalidInputException {
+    private static void deleteTask(String input, ArrayList<Task> tasks) throws InvalidInputException {
         try {
-            int taskIndex = Integer.parseInt(input.substring(5)) - 1;
-            if (taskIndex >= 0 && taskIndex < taskCount) {
-                tasks[taskIndex].isDone = true;
+            int taskIndex = Integer.parseInt(input.substring(0)) - 1;
+            if (taskIndex >= 0 && taskIndex < tasks.size()) {
+                Task task = tasks.remove(taskIndex);
                 System.out.println("____________________________________________________________\n" +
-                        " Nice! I've marked this task as done:\n" +
-                        "    [" + tasks[taskIndex].getStatusIcon() + "] " + tasks[taskIndex].description + "\n" +
+                        " Noted. I've removed this task:\n" +
+                        "    " + task + "\n" +
+                        " Now you have " + tasks.size() + " tasks in the list.\n" +
                         "____________________________________________________________\n");
             } else {
                 System.out.println("____________________________________________________________\n" +
@@ -108,19 +113,39 @@ public class Giorgo {
                         "____________________________________________________________\n");
             }
         } catch (NumberFormatException e) {
-            throw new InvalidInputException("Invalid input. Please provide a task number after 'mark'.");
+            throw new InvalidInputException("Invalid input. Please provide a task number after 'delete'.");
         }
     }
 
+        // Helper method to mark a task as done
+        private static void markTask(String input, ArrayList<Task> tasks) throws InvalidInputException {
+            try {
+                int taskIndex = Integer.parseInt(input.substring(0)) - 1;
+                if (taskIndex >= 0 && taskIndex < tasks.size()) {
+                    tasks.get(taskIndex).isDone = true;
+                    System.out.println("____________________________________________________________\n" +
+                            " Nice! I've marked this task as done:\n" +
+                            "    [" + tasks.get(taskIndex).getStatusIcon() + "] " + tasks.get(taskIndex).description + "\n" +
+                            "____________________________________________________________\n");
+                } else {
+                    System.out.println("____________________________________________________________\n" +
+                            " Invalid task number.\n" +
+                            "____________________________________________________________\n");
+                }
+            } catch (NumberFormatException e) {
+                throw new InvalidInputException("Invalid input. Please provide a task number after 'mark'.");
+            }
+        }
+
     // Helper method to unmark a task
-    private static void unmarkTask(String input, Task[] tasks, int taskCount) throws InvalidInputException {
+    private static void unmarkTask(String input, ArrayList<Task> tasks) throws InvalidInputException {
         try {
-            int taskIndex = Integer.parseInt(input.substring(7)) - 1;
-            if (taskIndex >= 0 && taskIndex < taskCount) {
-                tasks[taskIndex].isDone = false;
+            int taskIndex = Integer.parseInt(input.substring(0)) - 1;
+            if (taskIndex >= 0 && taskIndex < tasks.size()) {
+                tasks.get(taskIndex).isDone = false;
                 System.out.println("____________________________________________________________\n" +
                         " OK, I've marked this task as not done yet:\n" +
-                        "    [" + tasks[taskIndex].getStatusIcon() + "] " + tasks[taskIndex].description + "\n" +
+                        "    [" + tasks.get(taskIndex).getStatusIcon() + "] " + tasks.get(taskIndex).description + "\n" +
                         "____________________________________________________________\n");
             } else {
                 System.out.println("____________________________________________________________\n" +
@@ -132,13 +157,13 @@ public class Giorgo {
         }
     }
 
-    private static void addTask(Task task, Task[] tasks, int taskCount) throws InvalidInputException {
-        if (taskCount < 100) {
-            tasks[taskCount] = task;
+    private static void addTask(Task task, ArrayList<Task> tasks) throws InvalidInputException {
+        if (tasks.size() < 100) {
+            tasks.add(task);
             System.out.println("____________________________________________________________\n" +
                     " Got it. I've added this task:\n" +
                     "    " + task + "\n" +
-                    " Now you have " + (taskCount + 1) + " tasks in the list.\n" +
+                    " Now you have " + tasks.size() + " tasks in the list.\n" +
                     "____________________________________________________________\n");
         } else {
             throw new InvalidInputException("Task list is full. Cannot add more tasks.");
