@@ -1,0 +1,9 @@
+todo Buy groceries
+deadline Finish presentation /by Aug 25 2024
+event Attend workshop /from Aug 22 2024 10am /to 12pm
+todo Call mom
+list
+mark 3
+unmark 2
+list
+bye
