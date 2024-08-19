@@ -5,8 +5,8 @@ public class Giorgo {
     public static void main(String[] args) {
         String logo = " Giorgo ";
         Scanner scanner = new Scanner(System.in);
-        Task[] tasks = new Task[100]; // Fixed-size array to store Task objects
-        int taskCount = 0; // Keep track of the number of tasks
+        Task[] tasks = new Task[100];
+        int taskCount = 0;
 
         System.out.println(
                 "____________________________________________________________\n" +
@@ -24,9 +24,29 @@ public class Giorgo {
                 markTask(input, tasks, taskCount);
             } else if (input.startsWith("unmark ")) {
                 unmarkTask(input, tasks, taskCount);
-            } else if (!input.equalsIgnoreCase("bye")) {
-                addTask(input, tasks, taskCount);
+            } else if (input.startsWith("todo ")) {
+                addTask(new Todo(input.substring(5)), tasks, taskCount);
                 taskCount++;
+            } else if (input.startsWith("deadline ")) {
+                String[] parts = input.substring(9).split("/by ");
+                if (parts.length == 2) {
+                    addTask(new Deadline(parts[0].trim(), parts[1].trim()), tasks, taskCount);
+                    taskCount++;
+                } else {
+                    System.out.println("____________________________________________________________\n" +
+                            " Invalid deadline format. Use: deadline <description> /by <date/time>\n" +
+                            "____________________________________________________________\n");
+                }
+            } else if (input.startsWith("event ")) {
+                String[] parts = input.substring(6).split("/from |/to ");
+                if (parts.length == 3) {
+                    addTask(new Event(parts[0].trim(), parts[1].trim(), parts[2].trim()), tasks, taskCount);
+                    taskCount++;
+                } else {
+                    System.out.println("____________________________________________________________\n" +
+                            " Invalid event format. Use: event <description> /from <start> /to <end>\n" +
+                            "____________________________________________________________\n");
+                }
             }
 
         } while (!input.equalsIgnoreCase("bye"));
@@ -39,6 +59,7 @@ public class Giorgo {
         scanner.close();
     }
 
+
     // Helper method to list tasks
     private static void listTasks(Task[] tasks, int taskCount) {
         if (taskCount == 0) {
@@ -49,7 +70,7 @@ public class Giorgo {
             System.out.println("____________________________________________________________\n" +
                     " Here are the tasks in your list:\n");
             for (int i = 0; i < taskCount; i++) {
-                System.out.println((i + 1) + ".[" + tasks[i].getStatusIcon() + "] " + tasks[i].description);
+                System.out.println((i + 1) + "." + tasks[i].toString());
             }
             System.out.println("____________________________________________________________\n");
         }
@@ -99,12 +120,13 @@ public class Giorgo {
         }
     }
 
-    // Helper method to add a task
-    private static void addTask(String input, Task[] tasks, int taskCount) {
+    private static void addTask(Task task, Task[] tasks, int taskCount) {
         if (taskCount < 100) {
-            tasks[taskCount] = new Task(input);
+            tasks[taskCount] = task;
             System.out.println("____________________________________________________________\n" +
-                    " added: " + input + "\n" +
+                    " Got it. I've added this task:\n" +
+                    "    " + task + "\n" +
+                    " Now you have " + (taskCount + 1) + " tasks in the list.\n" +
                     "____________________________________________________________\n");
         } else {
             System.out.println("____________________________________________________________\n" +
@@ -114,6 +136,9 @@ public class Giorgo {
     }
 }
 
+
+
+// Task class (base class)
 class Task {
     protected String description;
     protected boolean isDone;
@@ -124,6 +149,54 @@ class Task {
     }
 
     public String getStatusIcon() {
-        return (isDone ? "X" : " "); // mark done task with X
+        return (isDone ? "X" : " ");
+    }
+
+    @Override
+    public String toString() {
+        return "[" + getStatusIcon() + "] " + description;
+    }
+}
+
+class Todo extends Task {
+    public Todo(String description) {
+        super(description);
+    }
+
+    @Override
+    public String toString() {
+        return "[T]" + super.toString();
+    }
+}
+
+// Deadline class (inherits from Task)
+class Deadline extends Task {
+    protected String by;
+
+    public Deadline(String description, String by) {
+        super(description);
+        this.by = by;
+    }
+
+    @Override
+    public String toString() {
+        return "[D]" + super.toString() + " (by: " + by + ")";
+    }
+}
+
+// Event class (inherits from Task)
+class Event extends Task {
+    protected String from;
+    protected String to;
+
+    public Event(String description, String from, String to) {
+        super(description);
+        this.from = from;
+        this.to = to;
+    }
+
+    @Override
+    public String toString() {
+        return "[E]" + super.toString() + " (from: " + from + " to: " + to + ")";
     }
 }
