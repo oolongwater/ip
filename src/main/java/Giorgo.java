@@ -3,7 +3,29 @@ import java.util.ArrayList;
 
 public class Giorgo {
 
+    public enum Command {
+        LIST,
+        MARK,
+        UNMARK,
+        TODO,
+        DEADLINE,
+        EVENT,
+        DELETE,
+        BYE,
+        UNKNOWN;
+
+        public static Command fromString(String commandString) {
+            for (Command command : Command.values()) {
+                if (command.name().equalsIgnoreCase(commandString)) {
+                    return command;
+                }
+            }
+            return UNKNOWN;
+        }
+    }
+
     public static void main(String[] args) throws InvalidInputException {
+
         String logo = "Giorgo";
         Scanner scanner = new Scanner(System.in);
         ArrayList<Task> tasks = new ArrayList<>();
@@ -16,68 +38,70 @@ public class Giorgo {
                         "____________________________________________________________\n");
 
         String input = null;
-        do {
-            try {
-                input = scanner.nextLine().trim();
-                String[] parts = input.split(" ", 2);
-                String command = parts[0];
-                String argument = parts.length > 1 ? parts[1] : "";
 
-                switch (command.toLowerCase()) {
-                    case "list":
-                        listTasks(tasks);
-                        break;
-                    case "mark":
-                        markTask(argument, tasks);
-                        break;
-                    case "unmark":
-                        unmarkTask(argument, tasks);
-                        break;
-                    case "todo":
-                        if (argument.isEmpty()) {
-                            throw new InvalidInputException("OOPS!!! The description of a todo cannot be empty.");
-                        } else {
-                            addTask(new Todo(argument), tasks);
-                            taskCount++;
-                        }
-                        break;
-                    case "deadline":
-                        String[] deadlineParts = argument.split("/by ");
-                        if (deadlineParts.length == 2) {
-                            addTask(new Deadline(deadlineParts[0].trim(), deadlineParts[1].trim()), tasks);
-                            taskCount++;
-                        } else {
-                            throw new InvalidInputException("Invalid deadline format. Use: deadline <description> /by <date/time>");
-                        }
-                        break;
-                    case "event":
-                        String[] eventParts = argument.split("/from |/to ");
-                        if (eventParts.length == 3) {
-                            addTask(new Event(eventParts[0].trim(), eventParts[1].trim(), eventParts[2].trim()), tasks);
-                            taskCount++;
-                        } else {
-                            throw new InvalidInputException("Invalid event format. Use: event <description> /from <start> /to <end>");
-                        }
-                        break;
-                    case "delete":
-                        deleteTask(argument, tasks);
-                        break;
-                    case "bye":
-                        System.out.println("____________________________________________________________\n" +
-                                " Bye. Hope to see you again soon!\n" +
-                                "____________________________________________________________\n");
-                        break;
-                    default:
-                        throw new InvalidInputException("OOPS!!! I'm sorry, but I don't know what that means :-(");
+            do {
+                try {
+                    input = scanner.nextLine().trim();
+                    String[] parts = input.split(" ", 2);
+                    Command command = Command.fromString(parts[0]);
+                    String argument = parts.length > 1 ? parts[1] : "";
+
+                    switch (command) {
+                        case LIST:
+                            listTasks(tasks);
+                            break;
+                        case MARK:
+                            markTask(argument, tasks);
+                            break;
+                        case UNMARK:
+                            unmarkTask(argument, tasks);
+                            break;
+                        case TODO:
+                            if (argument.isEmpty()) {
+                                throw new InvalidInputException("OOPS!!! The description of a todo cannot be empty.");
+                            } else {
+                                addTask(new Todo(argument), tasks);
+                                taskCount++;
+                            }
+                            break;
+                        case DEADLINE:
+                            String[] deadlineParts = argument.split("/by ");
+                            if (deadlineParts.length == 2) {
+                                addTask(new Deadline(deadlineParts[0].trim(), deadlineParts[1].trim()), tasks);
+                                taskCount++;
+                            } else {
+                                throw new InvalidInputException("Invalid deadline format. Use: deadline <description> /by <date/time>");
+                            }
+                            break;
+                        case EVENT:
+                            String[] eventParts = argument.split("/from |/to ");
+                            if (eventParts.length == 3) {
+                                addTask(new Event(eventParts[0].trim(), eventParts[1].trim(), eventParts[2].trim()), tasks);
+                                taskCount++;
+                            } else {
+                                throw new InvalidInputException("Invalid event format. Use: event <description> /from <start> /to <end>");
+                            }
+                            break;
+                        case DELETE:
+                            deleteTask(argument, tasks);
+                            break;
+                        case BYE:
+                            System.out.println("____________________________________________________________\n" +
+                                    " Bye. Hope to see you again soon!\n" +
+                                    "____________________________________________________________\n");
+                            break;
+                        default:
+                            throw new InvalidInputException("OOPS!!! I'm sorry, but I don't know what that means :-(");
+                    }
+
+                } catch (InvalidInputException e) {
+                    System.out.println("____________________________________________________________\n" +
+                            e.getMessage() +
+                            "\n____________________________________________________________\n");
                 }
+            } while (!input.equalsIgnoreCase("bye"));
+        }
 
-            } catch (InvalidInputException e) {
-                System.out.println("____________________________________________________________\n" +
-                        e.getMessage() +
-                        "\n____________________________________________________________\n");
-            }
-        } while (!input.equalsIgnoreCase("bye"));
-    }
 
 
     // Helper method to list tasks
