@@ -7,6 +7,7 @@ import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.time.LocalDate;
 
 public class Giorgo {
     public enum Command {
@@ -18,7 +19,8 @@ public class Giorgo {
         EVENT,
         DELETE,
         BYE,
-        UNKNOWN;
+        UNKNOWN,
+        DATE;
 
         public static Command fromString(String commandString) {
             for (Command command : Command.values()) {
@@ -65,6 +67,9 @@ public class Giorgo {
                             break;
                         case UNMARK:
                             unmarkTask(argument, tasks);
+                            break;
+                        case DATE:
+                            listTasksOnDate(argument, tasks);
                             break;
                         case TODO:
                             if (argument.isEmpty()) {
@@ -129,6 +134,21 @@ public class Giorgo {
             }
             System.out.println("____________________________________________________________\n");
         }
+    }
+
+    private static void listTasksOnDate(String date, ArrayList<Task> tasks) {
+        LocalDate specifiedDate = LocalDate.parse(date, DateTimeFormatter.ofPattern("d/M/yyyy"));
+        System.out.println("____________________________________________________________\n" +
+                " Here are the tasks on " + specifiedDate.format(DateTimeFormatter.ofPattern("MMM dd yyyy")) + ":\n");
+        for (int i = 0; i < tasks.size(); i++) {
+            Task task = tasks.get(i);
+            if (task instanceof Deadline && ((Deadline) task).by.toLocalDate().equals(specifiedDate)) {
+                System.out.println((i + 1) + "." + task.toString());
+            } else if (task instanceof Event && LocalDate.parse(((Event) task).from, DateTimeFormatter.ofPattern("d/M/yyyy HHmm")).equals(specifiedDate)) {
+                System.out.println((i + 1) + "." + task.toString());
+            }
+        }
+        System.out.println("____________________________________________________________\n");
     }
 
     private static void deleteTask(String input, ArrayList<Task> tasks) throws InvalidInputException {
