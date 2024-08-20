@@ -1,8 +1,11 @@
+import java.io.*;
+import java.nio.file.Path;
 import java.util.Scanner;
 import java.util.ArrayList;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 public class Giorgo {
-
     public enum Command {
         LIST,
         MARK,
@@ -24,11 +27,15 @@ public class Giorgo {
         }
     }
 
+    private static final String DIRECTORY_PATH = System.getProperty("user.home") + File.separator + "chatbot_tasks";
+    private static final String FILE_PATH = DIRECTORY_PATH + File.separator + "tasks.txt";
+
     public static void main(String[] args) throws InvalidInputException {
 
         String logo = "Giorgo";
         Scanner scanner = new Scanner(System.in);
         ArrayList<Task> tasks = new ArrayList<>();
+        loadTasks(tasks);
         int taskCount = 0;
 
         System.out.println(
@@ -126,6 +133,7 @@ public class Giorgo {
             int taskIndex = Integer.parseInt(input.substring(0)) - 1;
             if (taskIndex >= 0 && taskIndex < tasks.size()) {
                 Task task = tasks.remove(taskIndex);
+                saveTasks(tasks); // Save tasks to file after a task is deleted
                 System.out.println("____________________________________________________________\n" +
                         " Noted. I've removed this task:\n" +
                         "    " + task + "\n" +
@@ -147,6 +155,7 @@ public class Giorgo {
                 int taskIndex = Integer.parseInt(input.substring(0)) - 1;
                 if (taskIndex >= 0 && taskIndex < tasks.size()) {
                     tasks.get(taskIndex).isDone = true;
+                    saveTasks(tasks); // Save tasks to file after a task is marked as done
                     System.out.println("____________________________________________________________\n" +
                             " Nice! I've marked this task as done:\n" +
                             "    [" + tasks.get(taskIndex).getStatusIcon() + "] " + tasks.get(taskIndex).description + "\n" +
@@ -167,6 +176,7 @@ public class Giorgo {
             int taskIndex = Integer.parseInt(input.substring(0)) - 1;
             if (taskIndex >= 0 && taskIndex < tasks.size()) {
                 tasks.get(taskIndex).isDone = false;
+                saveTasks(tasks); // Save tasks to file after a task is unmarked
                 System.out.println("____________________________________________________________\n" +
                         " OK, I've marked this task as not done yet:\n" +
                         "    [" + tasks.get(taskIndex).getStatusIcon() + "] " + tasks.get(taskIndex).description + "\n" +
@@ -184,6 +194,7 @@ public class Giorgo {
     private static void addTask(Task task, ArrayList<Task> tasks) throws InvalidInputException {
         if (tasks.size() < 100) {
             tasks.add(task);
+            saveTasks(tasks); // Save tasks to file after a task is added
             System.out.println("____________________________________________________________\n" +
                     " Got it. I've added this task:\n" +
                     "    " + task + "\n" +
@@ -191,6 +202,61 @@ public class Giorgo {
                     "____________________________________________________________\n");
         } else {
             throw new InvalidInputException("Task list is full. Cannot add more tasks.");
+        }
+    }
+
+    private static void saveTasks(ArrayList<Task> tasks) {
+        try {
+            Path directoryPath = Paths.get(DIRECTORY_PATH);
+            if (!Files.exists(directoryPath)) {
+                Files.createDirectories(directoryPath);
+            }
+
+            Path filePath = Paths.get(FILE_PATH);
+            BufferedWriter writer = Files.newBufferedWriter(filePath);
+
+            for (Task task : tasks) {
+                writer.write(task.toFileFormat());
+                writer.newLine();
+            }
+
+            writer.close();
+        } catch (IOException e) {
+            System.out.println("An error occurred while saving tasks.");
+        }
+    }
+
+    private static void loadTasks(ArrayList<Task> tasks) {
+        try {
+            Path directoryPath = Paths.get(DIRECTORY_PATH);
+            if (!Files.exists(directoryPath)) {
+                Files.createDirectories(directoryPath);
+            }
+
+            Path filePath = Paths.get(FILE_PATH);
+            if (!Files.exists(filePath)) {
+                Files.createFile(filePath);
+                return;
+            }
+
+            BufferedReader reader = Files.newBufferedReader(filePath);
+            String line;
+
+            while ((line = reader.readLine()) != null) {
+                Task task = switch (line.charAt(0)) {
+                    case 'T' -> Todo.fromFileFormat(line);
+                    case 'D' -> Deadline.fromFileFormat(line);
+                    case 'E' -> Event.fromFileFormat(line);
+                    default -> null;
+                };
+                if (task != null) {
+                    tasks.add(task);
+                }
+            }
+
+            reader.close();
+        } catch (IOException e) {
+            System.out.println("An error occurred while loading tasks.");
         }
     }
 }
@@ -203,7 +269,7 @@ class InvalidInputException extends Exception {
 }
 
 // Task class (base class)
-class Task {
+abstract class Task {
     protected String description;
     protected boolean isDone;
 
@@ -220,6 +286,13 @@ class Task {
     public String toString() {
         return "[" + getStatusIcon() + "] " + description;
     }
+
+    public abstract String toFileFormat();
+
+    public static Task fromFileFormat(String line) {
+        return null;
+    }
+
 }
 
 class Todo extends Task {
@@ -230,6 +303,28 @@ class Todo extends Task {
     @Override
     public String toString() {
         return "[T]" + super.toString();
+    }
+
+    @Override
+    public String toFileFormat() {
+        return "T | " + (isDone ? "1" : "0") + " | " + description;
+    }
+
+
+    public static Todo fromFileFormat(String line) {
+        String[] parts = line.split(" \\| ");
+        if (parts.length != 3 || !parts[0].equals("T")) {
+            return null;
+        }
+
+        Todo todo = null;
+        try {
+            todo = new Todo(parts[2]);
+        } catch (InvalidInputException e) {
+            e.printStackTrace();
+        }
+        todo.isDone = parts[1].equals("1");
+        return todo;
     }
 }
 
@@ -245,6 +340,23 @@ class Deadline extends Task {
     @Override
     public String toString() {
         return "[D]" + super.toString() + " (by: " + by + ")";
+    }
+
+    @Override
+    public String toFileFormat() {
+        return "D | " + (isDone ? "1" : "0") + " | " + description + " | " + by;
+    }
+
+    public static Deadline fromFileFormat(String line) {
+        String[] parts = line.split(" \\| ");
+        if (parts.length != 4 || !parts[0].equals("D")) {
+            return null;
+        }
+
+        Deadline deadline = null;
+        deadline = new Deadline(parts[2], parts[3]);
+        deadline.isDone = parts[1].equals("1");
+        return deadline;
     }
 }
 
@@ -262,6 +374,23 @@ class Event extends Task {
     @Override
     public String toString() {
         return "[E]" + super.toString() + " (from: " + from + " to: " + to + ")";
+    }
+
+    @Override
+    public String toFileFormat() {
+        return "E | " + (isDone ? "1" : "0") + " | " + description + " | " + from + " | " + to;
+    }
+
+    public static Event fromFileFormat(String line) {
+        String[] parts = line.split(" \\| ");
+        if (parts.length != 5 || !parts[0].equals("E")) {
+            return null;
+        }
+
+        Event event = null;
+        event = new Event(parts[2], parts[3], parts[4]);
+        event.isDone = parts[1].equals("1");
+        return event;
     }
 }
 
