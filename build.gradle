@@ -36,11 +36,11 @@ test {
 }
 
 application {
-    mainClass.set("giorgo.java")
+    mainClass.set('giorgo.giorgo')
 }
 
 shadowJar {
-    archiveBaseName = "giorgo.java"
+    archiveBaseName = "giorgo"
     archiveClassifier = null
 }
 

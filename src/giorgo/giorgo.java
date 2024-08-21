@@ -122,6 +122,10 @@ public class giorgo {
                         LocalDate date = parser.parseDate(argument);
                         ui.listTasksOnDate(String.valueOf(date), tasks);
                         break;
+                    case FIND:
+                        System.out.println("find command");
+                        ui.showMatchingTasks(argument, tasks);
+                        break;
                     case BYE:
                         ui.showGoodbye();
                         break;

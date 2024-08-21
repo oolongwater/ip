@@ -1,7 +1,5 @@
 package task;
 
-import exception.InvalidInputException;
-
 /**
  * Represents an abstract task in the Giorgo application.
  */

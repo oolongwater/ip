@@ -13,7 +13,8 @@ public enum Command {
     DELETE,
     BYE,
     UNKNOWN,
-    DATE;
+    DATE,
+    FIND;
 
     /**
      * Converts a string to a corresponding Command enum value.

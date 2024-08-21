@@ -160,4 +160,27 @@ public class ui {
     public String readCommand() {
         return scanner.nextLine().trim();
     }
+
+    /**
+     * Displays the tasks that match the given keyword.
+     *
+     * @param keyword the keyword to search for
+     * @param tasks the list of tasks to search
+     */
+    public void showMatchingTasks(String keyword, ArrayList<task> tasks) {
+        System.out.println("____________________________________________________________\n" +
+                " Here are the matching tasks in your list:\n");
+        int count = 0;
+        for (int i = 0; i < tasks.size(); i++) {
+            task task = tasks.get(i);
+            if (task.description.contains(keyword)) {
+                System.out.println((count + 1) + "." + task.toString());
+                count++;
+            }
+        }
+        if (count == 0) {
+            System.out.println(" No matching tasks found.\n");
+        }
+        System.out.println("____________________________________________________________\n");
+    }
 }
