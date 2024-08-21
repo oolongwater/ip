@@ -1,3 +1,5 @@
+package giorgo;
+
 import command.Command;
 import storage.Storage;
 import task.task;
@@ -11,7 +13,7 @@ import java.io.*;
 import java.util.ArrayList;
 import java.time.LocalDate;
 
-public class Giorgo {
+public class giorgo {
 
     private static final String DIRECTORY_PATH = System.getProperty("user.home") + File.separator + "chatbot_tasks";
     private static final String FILE_PATH = DIRECTORY_PATH + File.separator + "tasks.txt";
@@ -21,7 +23,7 @@ public class Giorgo {
     private ArrayList<task> tasks;
     private Parser parser;
 
-    public Giorgo() {
+    public giorgo() {
         createDirectoryIfNotExists();
         ui = new ui();
         storage = new Storage(FILE_PATH);
@@ -118,7 +120,7 @@ public class Giorgo {
     }
 
     public static void main(String[] args) {
-        new Giorgo().run();
+        new giorgo().run();
     }
 }
 
