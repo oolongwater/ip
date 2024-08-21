@@ -13,6 +13,10 @@ import java.io.*;
 import java.util.ArrayList;
 import java.time.LocalDate;
 
+/**
+ * Main class for the Giorgo application.
+ * Handles the initialization and running of the application.
+ */
 public class giorgo {
 
     private static final String DIRECTORY_PATH = System.getProperty("user.home") + File.separator + "chatbot_tasks";
@@ -23,6 +27,10 @@ public class giorgo {
     private ArrayList<task> tasks;
     private Parser parser;
 
+    /**
+     * Constructor for the Giorgo class.
+     * Initializes the UI, storage, tasks, and parser.
+     */
     public giorgo() {
         createDirectoryIfNotExists();
         ui = new ui();
@@ -31,6 +39,10 @@ public class giorgo {
         parser = new Parser();
     }
 
+    /**
+     * Ensures the directory for storing tasks exists.
+     * Creates the directory if it does not exist.
+     */
     private void createDirectoryIfNotExists() {
         File directory = new File(DIRECTORY_PATH);
         if (!directory.exists()){
@@ -38,6 +50,10 @@ public class giorgo {
         }
     }
 
+    /**
+     * Runs the main loop of the Giorgo application.
+     * Handles user input and executes corresponding commands.
+     */
     public void run() {
         ui.showWelcome();
 
@@ -119,6 +135,10 @@ public class giorgo {
         } while (!input.equalsIgnoreCase("bye"));
     }
 
+    /**
+     * Main method to start the Giorgo application.
+     * @param args Command line arguments
+     */
     public static void main(String[] args) {
         new giorgo().run();
     }

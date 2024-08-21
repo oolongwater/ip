@@ -13,14 +13,27 @@ import task.Deadline;
 import task.Event;
 import task.Todo;
 
+/**
+ * Handles the storage of tasks to and from a file.
+ */
 public class Storage {
 
     private String filePath;
 
+    /**
+     * Constructs a Storage object with the specified file path.
+     *
+     * @param filePath the path to the file where tasks are stored
+     */
     public Storage(String filePath) {
         this.filePath = filePath;
     }
 
+    /**
+     * Loads tasks from the file.
+     *
+     * @return a list of tasks loaded from the file
+     */
     public List<task> load() {
         List<task> tasks = new ArrayList<>();
         Path path = Paths.get(filePath);
@@ -61,6 +74,11 @@ public class Storage {
         return tasks;
     }
 
+    /**
+     * Saves the list of tasks to the file.
+     *
+     * @param tasks the list of tasks to be saved
+     */
     public void save(List<task> tasks) {
         try {
             BufferedWriter writer = Files.newBufferedWriter(Paths.get(filePath));

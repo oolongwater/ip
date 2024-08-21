@@ -4,16 +4,28 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 import exception.InvalidInputException;
 
+/**
+ * Unit tests for the Parser class.
+ */
 public class ParserTest {
 
     private final Parser parser = new Parser();
 
+    /**
+     * Tests the parseCommand method to ensure it correctly parses commands.
+     */
     @Test
     public void testParseCommand() {
         assertEquals(Command.LIST, parser.parseCommand("list"));
         assertEquals(Command.TODO, parser.parseCommand("todo read book"));
     }
 
+    /**
+     * Tests the parseDeadlineArguments method to ensure it correctly parses deadline arguments.
+     * Expects an InvalidInputException for invalid formats.
+     *
+     * @throws InvalidInputException if the input format is invalid
+     */
     @Test
     public void testParseDeadlineArguments() throws InvalidInputException {
         assertThrows(InvalidInputException.class, () -> {
