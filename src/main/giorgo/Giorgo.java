@@ -87,10 +87,18 @@ public class Giorgo {
                         ui.showTaskAdded(event, tasks.size());
                         break;
                     case DELETE:
-                        task taskToDelete = tasks.get(Integer.parseInt(argument) - 1);
-                        tasks.get(Integer.parseInt(argument) - 1);
-                        storage.save(tasks);
-                        ui.showTaskDeleted(taskToDelete, tasks.size());
+                        try {
+                            int indexToDelete = Integer.parseInt(argument) - 1;
+                            if (indexToDelete >= 0 && indexToDelete < tasks.size()) {
+                                task taskToDelete = tasks.remove(indexToDelete);
+                                storage.save(tasks);
+                                ui.showTaskDeleted(taskToDelete, tasks.size());
+                            } else {
+                                throw new InvalidInputException("OOPS!!! The task index is out of bounds.");
+                            }
+                        } catch (NumberFormatException e) {
+                            throw new InvalidInputException("OOPS!!! The task index must be a number.");
+                        }
                         break;
                     case DATE:
                         LocalDate date = parser.parseDate(argument);
