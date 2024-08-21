@@ -11,7 +11,15 @@ repositories {
 dependencies {
     testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.10.0'
     testRuntimeOnly group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: '5.10.0'
+    implementation 'org.junit.jupiter:junit-jupiter-api:5.5.1'
+    implementation 'org.junit.jupiter:junit-jupiter-engine:5.5.1'
+    implementation 'org.junit.jupiter:junit-jupiter-params:5.5.1'
+    implementation 'org.junit.platform:junit-platform-launcher:1.5.1'
+    implementation 'org.junit.platform:junit-platform-runner:1.5.1'
+    implementation 'org.junit.platform:junit-platform-suite-api:1.5.1'
 }
+
+sourceSets.main.java.srcDirs = ['src']
 
 test {
     useJUnitPlatform()
@@ -28,14 +36,14 @@ test {
 }
 
 application {
-    mainClass.set("seedu.duke.Duke")
+    mainClass.set("giorgo.java")
 }
 
 shadowJar {
-    archiveBaseName = "duke"
+    archiveBaseName = "giorgo.java"
     archiveClassifier = null
 }
 
-run{
+run {
     standardInput = System.in
 }
