@@ -40,3 +40,9 @@
     -fx-opacity: 0;
 }
 
+/* src/main/resources/css/main.css */
+.image-view {
+    /* Ensure no color-altering styles are applied here */
+    -fx-effect: null; /* Remove any effects */
+    -fx-opacity: 1.0; /* Ensure full opacity */
+}
