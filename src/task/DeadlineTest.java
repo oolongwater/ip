@@ -1,10 +1,12 @@
 package task;
 
-import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+
+import org.junit.jupiter.api.Test;
 
 /**
  * Unit tests for the Deadline class.
@@ -17,18 +19,16 @@ public class DeadlineTest {
      */
     @Test
     public void testDeadlineConstructor() {
-        assertThrows(DateTimeParseException.class, () -> {
-            new Deadline("submit report", "invalid date");
-        });
+        assertThrows(DateTimeParseException.class, () -> new Deadline("submit report", "invalid date"));
 
         Deadline deadline = new Deadline("submit report", "12/12/2023 1800");
-        assertEquals("submit report", deadline.description);
-        assertEquals("Dec 12 2023, 6:00PM", deadline.by.format(DateTimeFormatter.ofPattern("MMM dd yyyy, h:mma")));
+        assertEquals("submit report", deadline.getDescription());
+        assertEquals("Dec 12 2023, 6:00PM", deadline.getBy().format(DateTimeFormatter.ofPattern("MMM dd yyyy, h:mma")));
     }
 
     /**
      * Tests the toString method to ensure it returns the correct string representation
-     * of the Deadline task.
+     * of the Deadline Task.
      */
     @Test
     public void testToString() {

@@ -3,14 +3,14 @@ package task;
 import exception.InvalidInputException;
 
 /**
- * Represents a to-do task in the Giorgo application.
+ * Represents a to-do Task in the Giorgo application.
  */
-public class Todo extends task {
+public class Todo extends Task {
 
     /**
-     * Constructs a Todo task with the specified description.
+     * Constructs a Todo Task with the specified description.
      *
-     * @param description the description of the to-do task
+     * @param description the description of the to-do Task
      * @throws InvalidInputException if the description is invalid
      */
     public Todo(String description) throws InvalidInputException {
@@ -18,9 +18,9 @@ public class Todo extends task {
     }
 
     /**
-     * Returns a string representation of the Todo task.
+     * Returns a string representation of the Todo Task.
      *
-     * @return a string representation of the Todo task
+     * @return a string representation of the Todo Task
      */
     @Override
     public String toString() {
@@ -28,20 +28,20 @@ public class Todo extends task {
     }
 
     /**
-     * Returns the file format representation of the Todo task.
+     * Returns the file format representation of the Todo Task.
      *
-     * @return the file format representation of the Todo task
+     * @return the file format representation of the Todo Task
      */
     @Override
     public String toFileFormat() {
-        return "T | " + (isDone ? "1" : "0") + " | " + description;
+        return "T | " + (isDone() ? "1" : "0") + " | " + getDescription();
     }
 
     /**
-     * Creates a Todo task from its file format representation.
+     * Creates a Todo Task from its file format representation.
      *
-     * @param line the file format representation of the Todo task
-     * @return the Todo task, or null if the format is invalid
+     * @param line the file format representation of the Todo Task
+     * @return the Todo Task, or null if the format is invalid
      */
     public static Todo fromFileFormat(String line) {
         String[] parts = line.split(" \\| ");
@@ -55,7 +55,8 @@ public class Todo extends task {
         } catch (InvalidInputException e) {
             e.printStackTrace();
         }
-        todo.isDone = parts[1].equals("1");
+        assert todo != null;
+        todo.setDone(parts[1].equals("1"));
         return todo;
     }
 }

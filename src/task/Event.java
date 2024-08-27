@@ -1,14 +1,14 @@
 package task;
 
 /**
- * Represents an event task in the Giorgo application.
+ * Represents an event Task in the Giorgo application.
  */
-public class Event extends task {
-    public String from;
-    protected String to;
+public class Event extends Task {
+    private final String from;
+    private final String to;
 
     /**
-     * Constructs an Event task with the specified description, start time, and end time.
+     * Constructs an Event Task with the specified description, start time, and end time.
      *
      * @param description the description of the event
      * @param from the start time of the event
@@ -21,9 +21,18 @@ public class Event extends task {
     }
 
     /**
-     * Returns a string representation of the Event task.
+     * Returns the start time of the event.
      *
-     * @return a string representation of the Event task
+     * @return the start time of the event
+     */
+    public String getFrom() {
+        return from;
+    }
+
+    /**
+     * Returns a string representation of the Event Task.
+     *
+     * @return a string representation of the Event Task
      */
     @Override
     public String toString() {
@@ -31,20 +40,20 @@ public class Event extends task {
     }
 
     /**
-     * Returns the file format representation of the Event task.
+     * Returns the file format representation of the Event Task.
      *
-     * @return the file format representation of the Event task
+     * @return the file format representation of the Event Task
      */
     @Override
     public String toFileFormat() {
-        return "E | " + (isDone ? "1" : "0") + " | " + description + " | " + from + " | " + to;
+        return "E | " + (isDone() ? "1" : "0") + " | " + getDescription() + " | " + from + " | " + to;
     }
 
     /**
-     * Creates an Event task from its file format representation.
+     * Creates an Event Task from its file format representation.
      *
-     * @param line the file format representation of the Event task
-     * @return the Event task, or null if the format is invalid
+     * @param line the file format representation of the Event Task
+     * @return the Event Task, or null if the format is invalid
      */
     public static Event fromFileFormat(String line) {
         String[] parts = line.split(" \\| ");
@@ -53,7 +62,7 @@ public class Event extends task {
         }
 
         Event event = new Event(parts[2], parts[3], parts[4]);
-        event.isDone = parts[1].equals("1");
+        event.setDone(parts[1].equals("1"));
         return event;
     }
 }
