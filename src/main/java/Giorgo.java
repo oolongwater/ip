@@ -26,8 +26,9 @@ public class Giorgo {
     private final Storage storage;
     private final ArrayList<Task> tasks;
     private final Parser parser;
+
     /**
-     * * Constructs a new Giorgo instance.
+     * Constructs a new Giorgo instance.
      * Initializes the user interface, storage, task list, and parser.
      * Ensures the necessary directory for storing tasks exists.
      */
@@ -45,6 +46,7 @@ public class Giorgo {
             directory.mkdirs();
         }
     }
+
     public String getResponse(String input) {
         Command command = parser.parseCommand(input);
         String argument = parser.parseArgument(input);
@@ -53,7 +55,7 @@ public class Giorgo {
         try {
             switch (command) {
             case LIST:
-                response = ui.showTaskList(tasks);
+                response = ui.showTaskList(tasks.toArray(new Task[0]));
                 break;
             case MARK:
                 Task taskToMark = tasks.get(Integer.parseInt(argument) - 1);
@@ -107,10 +109,10 @@ public class Giorgo {
                 break;
             case DATE:
                 LocalDate date = parser.parseDate(argument);
-                response = ui.getTasksOnDate(String.valueOf(date), tasks);
+                response = ui.getTasksOnDate(String.valueOf(date), tasks.toArray(new Task[0]));
                 break;
             case FIND:
-                response = ui.getMatchingTasks(argument, tasks);
+                response = ui.getMatchingTasks(argument, tasks.toArray(new Task[0]));
                 break;
             case BYE:
                 response = ui.getGoodbye();
@@ -125,5 +127,3 @@ public class Giorgo {
         return response;
     }
 }
-
-

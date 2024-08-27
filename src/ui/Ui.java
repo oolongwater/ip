@@ -1,7 +1,5 @@
 package ui;
 
-import java.util.ArrayList;
-
 import task.Deadline;
 import task.Task;
 
@@ -16,10 +14,10 @@ public class Ui {
      * @param tasks The list of tasks to be displayed.
      * @return A string containing the formatted list of tasks.
      */
-    public String showTaskList(ArrayList<Task> tasks) {
+    public String showTaskList(Task... tasks) {
         StringBuilder sb = new StringBuilder("Here are your tasks:\n");
-        for (int i = 0; i < tasks.size(); i++) {
-            sb.append(i + 1).append(". ").append(tasks.get(i)).append("\n");
+        for (int i = 0; i < tasks.length; i++) {
+            sb.append(i + 1).append(". ").append(tasks[i]).append("\n");
         }
         return sb.toString();
     }
@@ -92,7 +90,7 @@ public class Ui {
      * @param tasks The list of tasks to search.
      * @return A string containing the list of matching tasks.
      */
-    public String getMatchingTasks(String argument, ArrayList<Task> tasks) {
+    public String getMatchingTasks(String argument, Task... tasks) {
         StringBuilder sb = new StringBuilder("Here are the matching tasks in your list:\n");
         for (Task task : tasks) {
             if (task.getDescription().contains(argument)) {
@@ -109,7 +107,7 @@ public class Ui {
      * @param tasks The list of tasks to search.
      * @return A string containing the list of tasks due on the given date.
      */
-    public String getTasksOnDate(String date, ArrayList<Task> tasks) {
+    public String getTasksOnDate(String date, Task... tasks) {
         StringBuilder sb = new StringBuilder("Here are the tasks on " + date + ":\n");
         boolean hasTasks = false;
 
