@@ -18,6 +18,21 @@ dependencies {
     implementation 'org.junit.platform:junit-platform-launcher:1.5.1'
     implementation 'org.junit.platform:junit-platform-runner:1.5.1'
     implementation 'org.junit.platform:junit-platform-suite-api:1.5.1'
+
+    String javaFxVersion = '17.0.7'
+
+    implementation group: 'org.openjfx', name: 'javafx-base', version: javaFxVersion, classifier: 'win'
+    implementation group: 'org.openjfx', name: 'javafx-base', version: javaFxVersion, classifier: 'mac'
+    implementation group: 'org.openjfx', name: 'javafx-base', version: javaFxVersion, classifier: 'linux'
+    implementation group: 'org.openjfx', name: 'javafx-controls', version: javaFxVersion, classifier: 'win'
+    implementation group: 'org.openjfx', name: 'javafx-controls', version: javaFxVersion, classifier: 'mac'
+    implementation group: 'org.openjfx', name: 'javafx-controls', version: javaFxVersion, classifier: 'linux'
+    implementation group: 'org.openjfx', name: 'javafx-fxml', version: javaFxVersion, classifier: 'win'
+    implementation group: 'org.openjfx', name: 'javafx-fxml', version: javaFxVersion, classifier: 'mac'
+    implementation group: 'org.openjfx', name: 'javafx-fxml', version: javaFxVersion, classifier: 'linux'
+    implementation group: 'org.openjfx', name: 'javafx-graphics', version: javaFxVersion, classifier: 'win'
+    implementation group: 'org.openjfx', name: 'javafx-graphics', version: javaFxVersion, classifier: 'mac'
+    implementation group: 'org.openjfx', name: 'javafx-graphics', version: javaFxVersion, classifier: 'linux'
 }
 
 sourceSets.main.java.srcDirs = ['src']
@@ -37,16 +52,20 @@ test {
 }
 
 application {
-    mainClass.set('giorgo.giorgo')
+    mainClass.set('Launcher')
 }
 
 shadowJar {
-    archiveBaseName = "giorgo"
+    archiveBaseName = "main"
     archiveClassifier = null
 }
 
 run {
-    standardInput = System.in
+//    standardInput = System.in
+    jvmArgs = [
+            '--module-path', classpath.asPath,
+            '--add-modules', 'javafx.controls,javafx.fxml'
+    ]
 }
 
 checkstyle {
