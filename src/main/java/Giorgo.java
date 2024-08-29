@@ -40,6 +40,10 @@ public class Giorgo {
         parser = new Parser();
     }
 
+    /**
+     * Ensures the necessary directory for storing tasks exists.
+     * Creates the directory if it does not already exist.
+     */
     private void createDirectoryIfNotExists() {
         File directory = new File(DIRECTORY_PATH);
         if (!directory.exists()) {
@@ -47,6 +51,12 @@ public class Giorgo {
         }
     }
 
+    /**
+     * Processes the user input and returns the appropriate response.
+     *
+     * @param input the user input as a String
+     * @return the response as a String
+     */
     public String getResponse(String input) {
         Command command = parser.parseCommand(input);
         String argument = parser.parseArgument(input);
