@@ -8,6 +8,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 import task.Deadline;
 import task.Event;
@@ -47,13 +49,10 @@ public class Storage {
             }
 
             try (BufferedReader reader = Files.newBufferedReader(path)) {
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    Task task = createTaskFromFileFormat(line);
-                    if (task != null) {
-                        tasks.add(task);
-                    }
-                }
+                tasks = reader.lines()
+                        .map(this::createTaskFromFileFormat)
+                        .filter(Objects::nonNull)
+                        .collect(Collectors.toList());
             }
 
         } catch (IOException e) {
@@ -72,10 +71,16 @@ public class Storage {
         Path path = Paths.get(filePath);
 
         try (BufferedWriter writer = Files.newBufferedWriter(path)) {
-            for (Task task : tasks) {
-                writer.write(task.toFileFormat());
-                writer.newLine();
-            }
+            tasks.stream()
+                    .map(Task::toFileFormat)
+                    .forEach(taskString -> {
+                        try {
+                            writer.write(taskString);
+                            writer.newLine();
+                        } catch (IOException e) {
+                            System.err.println("An error occurred while saving tasks: " + e.getMessage());
+                        }
+                    });
         } catch (IOException e) {
             System.err.println("An error occurred while saving tasks: " + e.getMessage());
         }
