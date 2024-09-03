@@ -1,24 +1,46 @@
-# Giorgo project template
+### **GiorgoLite: Your Personal Task Wizard! 🧙‍♂️**
 
-This is a project template for a greenfield Java project. It's named after the legendary Italian composer _Giorgio Moroder_. Given below are instructions on how to use it.
+> “I think teeth are the first reminder of mortality. I think that's where it begins to hit ya. Cus they don't come back and that's it.” - Terry A. Davis ([source](https://www.goodreads.com/author/quotes/7171073.Terry_A_Davis))
 
-## Setting up in Intellij
+Giorgo is here to lighten the load on your memory and help you stay on top of your game! It’s:
 
-Prerequisites: JDK 17, update Intellij to the most recent version.
+- Simple to use
+- Beautifully minimalistic
+- Powerful enough to handle all your tasks effortlessly
+- Fast Blazingly fast so you can get things done in a flash ⚡
 
-1. Open Intellij (if you are not in the welcome screen, click `File` > `Close Project` to close the existing project first)
-1. Open the project into Intellij as follows:
-   1. Click `Open`.
-   1. Select the project directory, and click `OK`.
-   1. If there are any further prompts, accept the defaults.
-1. Configure the project to use **JDK 17** (not other versions) as explained in [here](https://www.jetbrains.com/help/idea/sdk.html#set-up-jdk).<br>
-   In the same dialog, set the **Project language level** field to the `SDK default` option.
-3. After that, locate the `src/main/java/Giorgo.java` file, right-click it, and choose `Run Giorgo.main()` (if the code editor is showing compile errors, try restarting the IDE). If the setup is correct, you should see something like the below as the output:
-   ```
-   Hello from
-    ____        _        
-   |  _ \ _   _| | _____ 
-   | | | | | | | |/ / _ \
-   | |_| | |_| |   <  __/
-   |____/ \__,_|_|\_\___|
-   ```
+With Giorgo, you can:
+
+- Type away your tasks in seconds.
+- Organize your life like a ~~noob~~ pro.
+- Stay focused and ~~stressed~~ stress-free 😊.
+
+Ready to boost your productivity with a touch of magic? 🎩✨
+
+All you need to do is,
+
+- [ ] Download the _.jar_ file from [here](https://github.com/oolongwater/ip/releases/tag/A-Jar).
+- [ ] Copy the _.jar_ file into an empty folder.
+- [ ] Open a command window in that folder.
+- [ ] Run the command `java -jar "{filename}.jar"` e.g., `java -jar "Duke.jar"` (i.e., run the command in the same folder as the _.jar_ file).
+
+And it is **FREE!**
+
+Features:
+
+1.  Managing tasks
+2.  Managing deadlines
+3.  Reminders (coming soon)
+
+If you are a Java programmer, you can use it to practice Java too. Here's the `main` method:
+```java
+public class Main {
+    public static void main(String[] args) {
+        Application.launch(MainApp.class, args);
+    }
+}
+```
+
+
+
+
