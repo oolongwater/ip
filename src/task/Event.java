@@ -57,9 +57,8 @@ public class Event extends Task {
      */
     public static Event fromFileFormat(String line) {
         String[] parts = line.split(" \\| ");
-        if (parts.length != 5 || !parts[0].equals("E")) {
-            return null;
-        }
+        assert parts.length == 5 : "Event file format should have 5 parts";
+        assert parts[0].equals("E") : "Event file format should start with 'E'";
 
         Event event = new Event(parts[2], parts[3], parts[4]);
         event.setDone(parts[1].equals("1"));

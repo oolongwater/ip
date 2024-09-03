@@ -68,9 +68,8 @@ public class Deadline extends Task {
      */
     public static Deadline fromFileFormat(String line) {
         String[] parts = line.split(" \\| ");
-        if (parts.length != 4 || !parts[0].equals("D")) {
-            return null;
-        }
+        assert parts.length == 4 : "Deadline file format should have 4 parts";
+        assert parts[0].equals("D") : "Deadline file format should start with 'D'";
 
         Deadline deadline = null;
         try {
