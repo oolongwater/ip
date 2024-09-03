@@ -1,66 +1,63 @@
 package task;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+
 /**
  * Represents an event Task in the Giorgo application.
  */
 public class Event extends Task {
-    private final String from;
-    private final String to;
+    private LocalDateTime from;
+    private LocalDateTime to;
 
     /**
-     * Constructs an Event Task with the specified description, start time, and end time.
+     * Constructs an Event Task with the specified description, start date, end date, and priority.
      *
-     * @param description the description of the event
-     * @param from the start time of the event
-     * @param to the end time of the event
+     * @param description the description of the event Task
+     * @param from the start date of the event Task
+     * @param to the end date of the event Task
+     * @param priority the priority of the event Task
+     * @throws DateTimeParseException if the date format is invalid
      */
-    public Event(String description, String from, String to) {
+    public Event(String description, String from, String to, int priority) throws DateTimeParseException {
         super(description);
-        this.from = from;
-        this.to = to;
+        this.from = LocalDateTime.parse(from, DateTimeFormatter.ofPattern("dd/MM/yyyy HHmm"));
+        this.to = LocalDateTime.parse(to, DateTimeFormatter.ofPattern("dd/MM/yyyy HHmm"));
+        this.priority = priority;
     }
 
-    /**
-     * Returns the start time of the event.
-     *
-     * @return the start time of the event
-     */
-    public String getFrom() {
+    public LocalDateTime getFrom() {
         return from;
     }
 
-    /**
-     * Returns a string representation of the Event Task.
-     *
-     * @return a string representation of the Event Task
-     */
+    public LocalDateTime getTo() {
+        return to;
+    }
+
     @Override
     public String toString() {
-        return "[E]" + super.toString() + " (from: " + from + " to: " + to + ")";
+        return "[E]" + super.toString() + " (from: " + from.format(DateTimeFormatter.ofPattern("MMM dd yyyy, h:mma")) + " to: " + to.format(DateTimeFormatter.ofPattern("MMM dd yyyy, h:mma")) + ")";
     }
 
-    /**
-     * Returns the file format representation of the Event Task.
-     *
-     * @return the file format representation of the Event Task
-     */
     @Override
     public String toFileFormat() {
-        return "E | " + (isDone() ? "1" : "0") + " | " + getDescription() + " | " + from + " | " + to;
+        return String.format("E | %s | %d | %s | %s", isDone() ? "1" : "0", priority, getDescription(), from.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HHmm")) + " | " + to.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HHmm")));
     }
 
-    /**
-     * Creates an Event Task from its file format representation.
-     *
-     * @param line the file format representation of the Event Task
-     * @return the Event Task, or null if the format is invalid
-     */
-    public static Event fromFileFormat(String line) {
-        String[] parts = line.split(" \\| ");
-        assert parts.length == 5 : "Event file format should have 5 parts";
-        assert parts[0].equals("E") : "Event file format should start with 'E'";
+    public static Event fromFileFormat(String fileFormat) {
+        String[] parts = fileFormat.split(" \\| ");
+        if (parts.length != 6 || !parts[0].equals("E")) {
+            return null;
+        }
 
-        Event event = new Event(parts[2], parts[3], parts[4]);
+        Event event = null;
+        try {
+            event = new Event(parts[3], parts[4], parts[5], Integer.parseInt(parts[2]));
+        } catch (DateTimeParseException e) {
+            e.printStackTrace();
+        }
+        assert event != null;
         event.setDone(parts[1].equals("1"));
         return event;
     }

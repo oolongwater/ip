@@ -89,10 +89,10 @@ public class Giorgo {
     }
 
     private String handleTodo(String argument) throws InvalidInputException {
-        if (argument.isEmpty()) {
-            throw new InvalidInputException("OOPS!!! The description of a todo cannot be empty.");
-        }
-        Task todo = new Todo(argument);
+        String[] todoParts = parser.parseTodoArguments(argument);
+        assert todoParts.length == 2 : "Todo arguments should have 2 parts";
+        int priority = Integer.parseInt(todoParts[1].trim());
+        Task todo = new Todo(todoParts[0].trim(), priority);
         tasks.add(todo);
         storage.save(tasks);
         return ui.getTaskAdded(todo, tasks.size());
@@ -100,8 +100,9 @@ public class Giorgo {
 
     private String handleDeadline(String argument) throws InvalidInputException {
         String[] deadlineParts = parser.parseDeadlineArguments(argument);
-        assert deadlineParts.length == 2 : "Deadline arguments should have 2 parts";
-        Task deadline = new Deadline(deadlineParts[0].trim(), deadlineParts[1].trim());
+        assert deadlineParts.length == 3 : "Deadline arguments should have 3 parts";
+        int priority = Integer.parseInt(deadlineParts[2].trim());
+        Task deadline = new Deadline(deadlineParts[0].trim(), deadlineParts[1].trim(), priority);
         tasks.add(deadline);
         storage.save(tasks);
         return ui.getTaskAdded(deadline, tasks.size());
@@ -109,8 +110,9 @@ public class Giorgo {
 
     private String handleEvent(String argument) throws InvalidInputException {
         String[] eventParts = parser.parseEventArguments(argument);
-        assert eventParts.length == 3 : "Event arguments should have 3 parts";
-        Task event = new Event(eventParts[0].trim(), eventParts[1].trim(), eventParts[2].trim());
+        assert eventParts.length == 4 : "Event arguments should have 4 parts";
+        int priority = Integer.parseInt(eventParts[3].trim());
+        Task event = new Event(eventParts[0].trim(), eventParts[1].trim(), eventParts[2].trim(), priority);
         tasks.add(event);
         storage.save(tasks);
         return ui.getTaskAdded(event, tasks.size());

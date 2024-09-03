@@ -23,7 +23,7 @@ public class Ui {
     public String showTaskList(Task... tasks) {
         StringBuilder sb = new StringBuilder("Here are your tasks:\n");
         for (int i = 0; i < tasks.length; i++) {
-            sb.append(i + 1).append(". ").append(tasks[i]).append("\n");
+            sb.append(i + 1).append(". [Priority: ").append(tasks[i].getPriority()).append("] ").append(tasks[i]).append("\n");
         }
         return sb.toString();
     }
@@ -52,11 +52,12 @@ public class Ui {
      * Returns a message indicating that a task has been added.
      *
      * @param task The task that has been added.
-     * @param size The current number of tasks in the list.
+     * @param taskCount The current number of tasks in the list.
      * @return A string message indicating the task has been added.
      */
-    public String getTaskAdded(Task task, int size) {
-        return "Got it. I've added this task:\n" + task + "\nNow you have " + size + " tasks in the list.";
+    public String getTaskAdded(Task task, int taskCount) {
+        return String.format("Got it. I've added this task:\n  %s (priority: %d)\nNow you have %d tasks in the list.",
+                task.toString(), task.getPriority(), taskCount);
     }
 
     /**

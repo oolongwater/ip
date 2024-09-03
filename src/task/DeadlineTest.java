@@ -19,11 +19,12 @@ public class DeadlineTest {
      */
     @Test
     public void testDeadlineConstructor() {
-        assertThrows(DateTimeParseException.class, () -> new Deadline("submit report", "invalid date"));
+        assertThrows(DateTimeParseException.class, () -> new Deadline("submit report", "invalid date", 1));
 
-        Deadline deadline = new Deadline("submit report", "12/12/2023 1800");
+        Deadline deadline = new Deadline("submit report", "12/12/2023 1800", 2);
         assertEquals("submit report", deadline.getDescription());
         assertEquals("Dec 12 2023, 6:00PM", deadline.getBy().format(DateTimeFormatter.ofPattern("MMM dd yyyy, h:mma")));
+        assertEquals(2, deadline.getPriority());
     }
 
     /**
@@ -32,7 +33,7 @@ public class DeadlineTest {
      */
     @Test
     public void testToString() {
-        Deadline deadline = new Deadline("submit report", "12/12/2023 1800");
+        Deadline deadline = new Deadline("submit report", "12/12/2023 1800", 2);
         assertEquals("[D][ ] submit report (by: Dec 12 2023, 6:00PM)", deadline.toString());
     }
 }

@@ -21,7 +21,15 @@ public class Parser {
         String[] parts = userInput.split(" ", 2);
         return Command.fromString(parts[0]);
     }
-
+    /**
+     * Parses the arguments for a Todo task.
+     *
+     * @param argument the input string containing the Todo description and priority
+     * @return an array containing the description and priority
+     */
+    public String[] parseTodoArguments(String argument) {
+        return argument.split(",", 2);
+    }
     /**
      * Parses the argument from the user input.
      *
@@ -41,9 +49,10 @@ public class Parser {
      * @throws InvalidInputException if the format is invalid
      */
     public String[] parseDeadlineArguments(String argument) throws InvalidInputException {
-        String[] parts = argument.split("/by ");
-        if (parts.length != 2) {
-            throw new InvalidInputException("Invalid deadline format. Use: deadline <description> /by <date/time>");
+        String[] parts = argument.split(" /by |, ");
+        if (parts.length != 3) {
+            throw new InvalidInputException(
+                    "Invalid deadline format. Use: deadline <description> /by <date/time>, <priority>");
         }
         return parts;
     }
@@ -56,9 +65,11 @@ public class Parser {
      * @throws InvalidInputException if the format is invalid
      */
     public String[] parseEventArguments(String argument) throws InvalidInputException {
-        String[] parts = argument.split("/from |/to ");
-        if (parts.length != 3) {
-            throw new InvalidInputException("Invalid event format. Use: event <description> /from <start> /to <end>");
+        String[] parts = argument.split(" /from | /to |, ");
+        if (parts.length != 4) {
+            throw new InvalidInputException(
+                    "Invalid event format. Use: event <description> /from <start date/time> /to <end date/time>, "
+                            + "<priority>");
         }
         return parts;
     }
