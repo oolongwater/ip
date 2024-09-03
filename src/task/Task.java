@@ -4,6 +4,7 @@ package task;
  * Represents an abstract Task in the Giorgo application.
  */
 public abstract class Task {
+    protected int priority; // Add priority field
     private final String description;
     private boolean isDone;
 
@@ -15,6 +16,7 @@ public abstract class Task {
     public Task(String description) {
         this.description = description;
         this.isDone = false;
+        this.priority = 0; // Default priority
     }
 
     /**
@@ -68,6 +70,16 @@ public abstract class Task {
      *
      * @return the file format representation of the Task
      */
-    public abstract String toFileFormat();
+    public String toFileFormat() {
+        return String.format("%s | %d | %s", isDone ? "1" : "0", priority, description);
+    }
 
+    /**
+     * Returns the priority of the Task.
+     *
+     * @return the priority of the Task
+     */
+    public int getPriority() {
+        return priority;
+    }
 }

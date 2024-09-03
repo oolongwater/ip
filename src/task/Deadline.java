@@ -5,79 +5,54 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
 /**
- * Represents a Task with a deadline in the Giorgo application.
+ * Represents a deadline Task in the Giorgo application.
  */
 public class Deadline extends Task {
-    private final LocalDateTime by;
+    private LocalDateTime by;
 
     /**
-     * Constructs a Deadline Task with the specified description and deadline date/time.
+     * Constructs a Deadline Task with the specified description, date, and priority.
      *
-     * @param description the description of the Task
-     * @param by the deadline date/time in the format d/M/yyyy HHmm
+     * @param description the description of the deadline Task
+     * @param by the date of the deadline Task
+     * @param priority the priority of the deadline Task
      * @throws DateTimeParseException if the date format is invalid
      */
-    public Deadline(String description, String by) {
+    public Deadline(String description, String by, int priority) throws DateTimeParseException {
         super(description);
-        try {
-            this.by = LocalDateTime.parse(by, DateTimeFormatter.ofPattern("d/M/yyyy HHmm"));
-        } catch (DateTimeParseException e) {
-            System.out.println("Invalid date format. Use: d/M/yyyy HHmm");
-            throw e;
-        }
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("[d/M/yyyy HHmm][dd/MM/yyyy HHmm]");
+        this.by = LocalDateTime.parse(by, formatter);
+        this.priority = priority;
     }
 
-    /**
-     * Returns the deadline date/time.
-     *
-     * @return the deadline date/time
-     */
     public LocalDateTime getBy() {
         return by;
     }
 
-    /**
-     * Returns a string representation of the Deadline Task.
-     *
-     * @return a string representation of the Deadline Task
-     */
     @Override
     public String toString() {
         return "[D]" + super.toString() + " (by: " + by.format(DateTimeFormatter.ofPattern("MMM dd yyyy, h:mma")) + ")";
     }
 
-    /**
-     * Returns the file format representation of the Deadline Task.
-     *
-     * @return the file format representation of the Deadline Task
-     */
     @Override
     public String toFileFormat() {
-        return "D | "
-                + (isDone() ? "1" : "0")
-                + " | "
-                + getDescription()
-                + " | "
-                + by.format(DateTimeFormatter.ofPattern("d/M/yyyy HHmm"));
+        return String.format("D | %s | %d | %s | %s", isDone() ? "1" : "0", priority, getDescription(), by.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HHmm")));
     }
-    /**
-     * Creates a Deadline Task from its file format representation.
-     *
-     * @param line the file format representation of the Deadline Task
-     * @return the Deadline Task, or null if the format is invalid
-     */
-    public static Deadline fromFileFormat(String line) {
-        String[] parts = line.split(" \\| ");
-        assert parts.length == 4 : "Deadline file format should have 4 parts";
-        assert parts[0].equals("D") : "Deadline file format should start with 'D'";
+
+    public static Deadline fromFileFormat(String fileFormat) {
+        String[] parts = fileFormat.split(" \\| ");
+        if (parts.length != 5 || !parts[0].equals("D")) {
+            return null;
+        }
 
         Deadline deadline = null;
         try {
-            deadline = new Deadline(parts[2], parts[3]);
-            deadline.setDone(parts[1].equals("1"));
+            deadline = new Deadline(parts[3], parts[4], Integer.parseInt(parts[2]));
         } catch (DateTimeParseException e) {
-            System.out.println("Invalid date format. Use: d/M/yyyy HHmm");
+            e.printStackTrace();
         }
+        assert deadline != null;
+        deadline.setDone(parts[1].equals("1"));
         return deadline;
     }
 }
