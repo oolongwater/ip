@@ -46,53 +46,59 @@ public class Storage {
                 return tasks;
             }
 
-            BufferedReader reader = Files.newBufferedReader(path);
-            String line;
-            while ((line = reader.readLine()) != null) {
-                String taskType = line.split(" \\| ")[0];
-                Task task = null;
-                switch (taskType) {
-                case "T":
-                    task = Todo.fromFileFormat(line);
-                    break;
-                case "D":
-                    task = Deadline.fromFileFormat(line);
-                    break;
-                case "E":
-                    task = Event.fromFileFormat(line);
-                    break;
-                default:
-                    assert false : "Unknown Task type: " + taskType;
-                    break;
-                }
-                if (task != null) {
-                    tasks.add(task);
+            try (BufferedReader reader = Files.newBufferedReader(path)) {
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    Task task = createTaskFromFileFormat(line);
+                    if (task != null) {
+                        tasks.add(task);
+                    }
                 }
             }
-            reader.close();
 
         } catch (IOException e) {
-            System.out.println("An error occurred while loading Tasks.");
+            System.err.println("An error occurred while loading tasks: " + e.getMessage());
         }
 
         return tasks;
     }
 
     /**
-     * Saves the list of Tasks to the file.
+     * Saves the list of tasks to the file.
      *
-     * @param tasks the list of Tasks to be saved
+     * @param tasks the list of tasks to be saved
      */
     public void save(List<Task> tasks) {
-        try {
-            BufferedWriter writer = Files.newBufferedWriter(Paths.get(filePath));
+        Path path = Paths.get(filePath);
+
+        try (BufferedWriter writer = Files.newBufferedWriter(path)) {
             for (Task task : tasks) {
                 writer.write(task.toFileFormat());
                 writer.newLine();
             }
-            writer.close();
         } catch (IOException e) {
-            System.out.println("An error occurred while saving Tasks.");
+            System.err.println("An error occurred while saving tasks: " + e.getMessage());
         }
+    }
+
+    /**
+     * Creates a task from its file format representation.
+     *
+     * @param fileFormat the file format representation of the task
+     * @return the created task, or null if the format is invalid
+     */
+    private Task createTaskFromFileFormat(String fileFormat) {
+        String[] parts = fileFormat.split(" \\| ");
+        String taskType = parts[0];
+
+        return switch (taskType) {
+        case "T" -> Todo.fromFileFormat(fileFormat);
+        case "D" -> Deadline.fromFileFormat(fileFormat);
+        case "E" -> Event.fromFileFormat(fileFormat);
+        default -> {
+            System.err.println("Unknown task type: " + taskType);
+            yield null;
+        }
+        };
     }
 }
