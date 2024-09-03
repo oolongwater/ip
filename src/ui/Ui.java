@@ -1,7 +1,13 @@
 package ui;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import task.Deadline;
 import task.Task;
+
+
 
 /**
  * Handles user interactions in the Giorgo application.
@@ -108,22 +114,18 @@ public class Ui {
      * @return A string containing the list of tasks due on the given date.
      */
     public String getTasksOnDate(String date, Task... tasks) {
-        StringBuilder sb = new StringBuilder("Here are the tasks on " + date + ":\n");
-        boolean hasTasks = false;
+        List<Task> tasksOnDate = Arrays.stream(tasks)
+                .filter(task -> task instanceof Deadline)
+                .map(task -> (Deadline) task)
+                .filter(deadline -> deadline.getBy().toLocalDate().toString().equals(date))
+                .collect(Collectors.toList());
 
-        for (Task task : tasks) {
-            if (task instanceof Deadline deadline) {
-                if (deadline.getBy().toLocalDate().toString().equals(date)) {
-                    sb.append(task).append("\n");
-                    hasTasks = true;
-                }
-            }
-        }
-
-        if (!hasTasks) {
+        if (tasksOnDate.isEmpty()) {
             return "No tasks on " + date;
         }
 
+        StringBuilder sb = new StringBuilder("Here are the tasks on " + date + ":\n");
+        tasksOnDate.forEach(task -> sb.append(task).append("\n"));
         return sb.toString();
     }
 }
