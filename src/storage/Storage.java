@@ -62,8 +62,7 @@ public class Storage {
                     task = Event.fromFileFormat(line);
                     break;
                 default:
-                    // Handle unexpected Task type
-                    System.out.println("Unknown Task type: " + taskType);
+                    assert false : "Unknown Task type: " + taskType;
                     break;
                 }
                 if (task != null) {
