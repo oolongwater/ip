@@ -110,9 +110,10 @@ public class Ui {
     public String getTasksOnDate(String date, Task... tasks) {
         StringBuilder sb = new StringBuilder("Here are the tasks on " + date + ":\n");
         boolean hasTasks = false;
+
         for (Task task : tasks) {
-            if (task instanceof Deadline) {
-                if (((Deadline) task).getBy().toLocalDate().toString().equals(date)) {
+            if (task instanceof Deadline deadline) {
+                if (deadline.getBy().toLocalDate().toString().equals(date)) {
                     sb.append(task).append("\n");
                     hasTasks = true;
                 }
@@ -120,7 +121,7 @@ public class Ui {
         }
 
         if (!hasTasks) {
-            sb = new StringBuilder("No tasks on " + date);
+            return "No tasks on " + date;
         }
 
         return sb.toString();
