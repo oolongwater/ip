@@ -1,30 +1,65 @@
 # Giorgo User Guide
 
-// Update the title above to match the actual product name
+![screenshot](Ui.png)
 
-// Product screenshot goes here
+## Introduction
+Giorgo is a task management chatbot that helps you keep track of your tasks, deadlines, and events. You can interact with Giorgo using simple text commands.
 
-// Product intro goes here
+## Features
 
-## Adding deadlines
+### Adding Tasks
+- **Todo**: Adds a todo task.
+    - **Command**: `todo <description>`
+    - **Example**: `todo read book`
+    - **Error**: If the description is empty, Giorgo will respond with "todo cannot be empty!"
 
-// Describe the action and its outcome.
+- **Deadline**: Adds a task with a deadline.
+    - **Command**: `deadline <description> /by <date>`
+    - **Example**: `deadline submit report /by 12/12/2023 1800`
+    - **Error**: If the date is invalid, Giorgo will respond with an appropriate error message.
 
-// Give examples of usage
+- **Event**: Adds an event with a start and end time.
+    - **Command**: `event <description> /from <start> /to <end>`
+    - **Example**: `event project meeting /from 12/12/2023 1400 /to 12/12/2023 1600`
 
-Example: `keyword (optional arguments)`
+### Listing Tasks
+- **List**: Lists all tasks.
+    - **Command**: `list`
+    - **Example**: `list`
 
-// A description of the expected outcome goes here
+### Marking Tasks
+- **Mark**: Marks a task as done.
+    - **Command**: `mark <index>`
+    - **Example**: `mark 1`
+    - **Error**: If the index is out of bounds, Giorgo will respond with "there are only [number of tasks] tasks in the list!"
 
-```
-expected output
-```
+- **Unmark**: Unmarks a task.
+    - **Command**: `unmark <index>`
+    - **Example**: `unmark 1`
+    - **Error**: If the index is out of bounds, Giorgo will respond with "there are only [number of tasks] tasks in the list!"
 
-## Feature ABC
+### Deleting Tasks
+- **Delete**: Deletes a task.
+    - **Command**: `delete <index>`
+    - **Example**: `delete 1`
+    - **Error**: If the index is out of bounds, Giorgo will respond with "UH-OH! There are only [number of tasks] tasks in the list!"
 
-// Feature details
+### Finding Tasks
+- **Find**: Finds tasks that match a keyword.
+    - **Command**: `find <keyword>`
+    - **Example**: `find book`
+    - **Error**: If no tasks are found, Giorgo will respond with "No tasks found matching [keyword]"
 
+### Viewing Tasks by Date
+- **Date**: Lists tasks on a specific date.
+    - **Command**: `date <date>`
+    - **Example**: `date 12/12/2023`
+    - **Error**: If no tasks are found, Giorgo will respond with "No tasks found on [date]"
 
-## Feature XYZ
+### Exiting
+- **Bye**: Exits the chatbot.
+    - **Command**: `bye`
+    - **Example**: `bye`
 
-// Feature details
+## Conclusion
+Giorgo is designed to make task management simple and efficient. Use the commands above to interact with Giorgo and manage your tasks effectively.

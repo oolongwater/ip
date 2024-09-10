@@ -65,6 +65,8 @@ public class Giorgo {
             case BYE -> handleBye();
             default -> throw new InvalidInputException("OOPS!!! I'm sorry, but I don't know what that means :-(");
             };
+        } catch (IndexOutOfBoundsException e) {
+            return e.getMessage();
         } catch (Exception e) {
             return ui.getError(e.getMessage());
         }
@@ -89,6 +91,9 @@ public class Giorgo {
     }
 
     private String handleTodo(String argument) throws InvalidInputException {
+        if (argument == null || argument.trim().isEmpty()) {
+            throw new InvalidInputException("todo cannot be empty!");
+        }
         String[] todoParts = parser.parseTodoArguments(argument);
         assert todoParts.length == 2 : "Todo arguments should have 2 parts";
         int priority = Integer.parseInt(todoParts[1].trim());
@@ -119,11 +124,17 @@ public class Giorgo {
     }
 
     private String handleDelete(String argument) {
-        int indexToDelete = Integer.parseInt(argument) - 1;
-        assert indexToDelete >= 0 && indexToDelete < tasks.size() : "Task index to delete should be within bounds";
-        Task taskToDelete = tasks.remove(indexToDelete);
-        storage.save(tasks);
-        return ui.getTaskDeleted(taskToDelete, tasks.size());
+        try {
+            int indexToDelete = Integer.parseInt(argument) - 1;
+            if (indexToDelete < 0 || indexToDelete >= tasks.size()) {
+                throw new IndexOutOfBoundsException("UH-OH! There are only " + tasks.size() + " tasks in the list!");
+            }
+            Task taskToDelete = tasks.remove(indexToDelete);
+            storage.save(tasks);
+            return ui.getTaskDeleted(taskToDelete, tasks.size());
+        } catch (IndexOutOfBoundsException e) {
+            return e.getMessage();
+        }
     }
 
     private String handleDate(String argument) throws InvalidInputException {
@@ -140,9 +151,11 @@ public class Giorgo {
         return ui.getGoodbye();
     }
 
-    private Task getTask(String argument) {
+    private Task getTask(String argument) throws IndexOutOfBoundsException {
         int index = Integer.parseInt(argument) - 1;
-        assert index >= 0 && index < tasks.size() : "Task index should be within bounds";
+        if (index < 0 || index >= tasks.size()) {
+            throw new IndexOutOfBoundsException("UH-OH! There are only " + tasks.size() + " tasks in the list!");
+        }
         return tasks.get(index);
     }
 }
