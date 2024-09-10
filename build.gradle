@@ -51,16 +51,14 @@ test {
     }
 }
 
-application {
-    mainClass.set('seedu.giorgo.Main')
-}
+//application {
+//    mainClass.set('seedu.giorgo.Main')
+//}
+mainClassName = 'main.java.Launcher'
 
 shadowJar {
-    archiveBaseName = "main"
+    archiveBaseName = "giorgo"
     archiveClassifier = null
-    manifest {
-        attributes 'Main-Class': 'seedu.giorgo.Main'
-    }
 }
 
 run {
@@ -68,6 +66,7 @@ run {
             '--module-path', classpath.asPath,
             '--add-modules', 'javafx.controls,javafx.fxml'
     ]
+    standardInput = System.in
 }
 
 checkstyle {
