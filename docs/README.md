@@ -9,18 +9,18 @@ Giorgo is a task management chatbot that helps you keep track of your tasks, dea
 
 ### Adding Tasks
 - **Todo**: Adds a todo task.
-    - **Command**: `todo <description>`
-    - **Example**: `todo read book`
+    - **Command**: `todo <description>, <priority>`
+    - **Example**: `todo read book, 1`
     - **Error**: If the description is empty, Giorgo will respond with "todo cannot be empty!"
 
 - **Deadline**: Adds a task with a deadline.
-    - **Command**: `deadline <description> /by <date>`
-    - **Example**: `deadline submit report /by 12/12/2023 1800`
+    - **Command**: `deadline <description> /by <date>, <priority>`
+    - **Example**: `deadline submit report /by 12/12/2023 1800, 1`
     - **Error**: If the date is invalid, Giorgo will respond with an appropriate error message.
 
 - **Event**: Adds an event with a start and end time.
-    - **Command**: `event <description> /from <start> /to <end>`
-    - **Example**: `event project meeting /from 12/12/2023 1400 /to 12/12/2023 1600`
+    - **Command**: `event <description> /from <start> /to <end>, <priority>`
+    - **Example**: `event project meeting /from 12/12/2023 1400 /to 12/12/2023 1600, 1`
 
 ### Listing Tasks
 - **List**: Lists all tasks.
@@ -51,7 +51,7 @@ Giorgo is a task management chatbot that helps you keep track of your tasks, dea
     - **Error**: If no tasks are found, Giorgo will respond with "No tasks found matching [keyword]"
 
 ### Viewing Tasks by Date
-- **Date**: Lists tasks on a specific date.
+- **Date**: Lists tasks on a specific date _(dd / mm / yyyy)_.
     - **Command**: `date <date>`
     - **Example**: `date 12/12/2023`
     - **Error**: If no tasks are found, Giorgo will respond with "No tasks found on [date]"

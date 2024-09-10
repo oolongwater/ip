@@ -52,16 +52,18 @@ test {
 }
 
 application {
-    mainClass.set('Launcher')
+    mainClass.set('seedu.giorgo.Main')
 }
 
 shadowJar {
     archiveBaseName = "main"
     archiveClassifier = null
+    manifest {
+        attributes 'Main-Class': 'seedu.giorgo.Main'
+    }
 }
 
 run {
-//    standardInput = System.in
     jvmArgs = [
             '--module-path', classpath.asPath,
             '--add-modules', 'javafx.controls,javafx.fxml'
@@ -70,6 +72,6 @@ run {
 
 checkstyle {
     toolVersion = '10.2'
-    configFile = file('config/checkstyle/checkstyle.xml') // Use custom checkstyle.xml
-    configProperties.suppressionsFile = file('config/checkstyle/suppressions.xml') // Use custom suppressions.xml
+    configFile = file('config/checkstyle/checkstyle.xml')
+    configProperties.suppressionsFile = file('config/checkstyle/suppressions.xml')
 }
